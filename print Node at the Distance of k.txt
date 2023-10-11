@@ -1,0 +1,50 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode(int x) { val = x; }
+}
+
+class Solution {
+    Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+        findParents(root, null); // Populate the parentMap
+
+        List<Integer> result = new ArrayList<>();
+        dfs(target, k, new boolean[501], result);
+        return result;
+    }
+
+    private void findParents(TreeNode node, TreeNode parent) {
+        if (node == null) return;
+        parentMap.put(node, parent);
+        findParents(node.left, node);
+        findParents(node.right, node);
+    }
+
+    private void dfs(TreeNode node, int k, boolean[] visited, List<Integer> result) {
+        if (node == null || visited[node.val]) return;
+
+        visited[node.val] = true;
+        if (k == 0) {
+            result.add(node.val);
+            return;
+        }
+
+        // Check left child
+        dfs(node.left, k - 1, visited, result);
+
+        // Check right child
+        dfs(node.right, k - 1, visited, result);
+
+        // Check parent
+        TreeNode parent = parentMap.get(node);
+        dfs(parent, k - 1, visited, result);
+    }
+}
