@@ -1,0 +1,20 @@
+class Solution {
+    public boolean isValidSerialization(String preorder) {
+        String[] nodes = preorder.split(",");
+        int slots = 1; // Count of available slots
+
+        for (String node : nodes) {
+            slots--; // Use one slot
+
+            if (slots < 0) {
+                return false; // Not enough slots to fit the current node
+            }
+
+            if (!node.equals("#")) {
+                slots += 2; // Add two slots for the children
+            }
+        }
+
+        return slots == 0; // All slots should be used up at the end
+    }
+}
